@@ -1,7 +1,8 @@
-import asyncHandler from "../utils/asyncHandler.js"
-import { ApiError } from "../utils/ApiErrors.js"
-import { User } from "../models/users.model.js"
+import fs from "fs"
 import bcrypt, { hash } from "bcrypt"
+import { User } from "../models/users.model.js"
+import { ApiError } from "../utils/ApiErrors.js"
+import asyncHandler from "../utils/asyncHandler.js"
 
 import { uploadOnCloudinary } from "../utils/cloudinary.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
@@ -47,6 +48,11 @@ const registerUser = asyncHandler(async (req, res) => {
 
   if (!avatarLocalPath) {
     throw new ApiError(400, "Avatar is required!")
+  }
+
+  if (avatarLocalPath == coverImageLocalPath) {
+    fs.unlinkSync(avatarLocalPath)
+    throw new ApiError(400, "Avatar and Cover image cannot be the same!")
   }
 
   const avatar = await uploadOnCloudinary(avatarLocalPath)

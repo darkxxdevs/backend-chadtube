@@ -1,5 +1,5 @@
 import fs from "fs"
-import bcrypt, { hash } from "bcrypt"
+import bcrypt from "bcrypt"
 import { User } from "../models/users.model.js"
 import { ApiError } from "../utils/ApiErrors.js"
 import asyncHandler from "../utils/asyncHandler.js"
@@ -10,8 +10,9 @@ import { ApiResponse } from "../utils/ApiResponse.js"
 const generateTokens = async (userId) => {
   try {
     const user = await User.findById(userId)
-    const accessToken = await user.generateAccessToken()
-    const refreshToken = await user.generateRefreshToken()
+
+    const accessToken = user.generateAccessToken()
+    const refreshToken = user.generateRefreshToken()
 
     user.refreshToken = refreshToken
 
@@ -21,7 +22,7 @@ const generateTokens = async (userId) => {
 
     return { accessToken, refreshToken }
   } catch (error) {
-    throw new ApiError(500, "Error generating tokens")
+    throw new ApiError(500, `Error generating tokens:${error.message}`)
   }
 }
 
@@ -65,7 +66,7 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   if (!avatarLocalPath) {
-    throw new ApiError(400, "Avatar is required!")
+    throw new ApiError(400, "Avatar path not found!")
   }
 
   if (avatarLocalPath == coverImageLocalPath) {
@@ -74,20 +75,20 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   const avatar = await uploadOnCloudinary(avatarLocalPath)
-  await uploadOnCloudinary(coverImageLocalPath)
+  const coverImage = await uploadOnCloudinary(coverImageLocalPath)
 
   if (!avatar) {
     throw new ApiError(400, "Avatar is required !")
   }
 
-  const saltGenRounds = 10
-
-  const salt = await bcrypt.genSalt(saltGenRounds)
+  const salt = await bcrypt.genSalt(10)
   const hashedPassword = await bcrypt.hash(password, salt)
 
   const newUser = await User.create({
     fullName,
     email,
+    avatar: avatar.url,
+    coverImage: coverImage.url || "",
     username: username.toLowerCase(),
     password: hashedPassword,
   })
@@ -108,11 +109,13 @@ const registerUser = asyncHandler(async (req, res) => {
 const loginUser = asyncHandler(async (req, res) => {
   const { email, username, password } = req.body
 
-  console.log(email)
-
   if (!username && !email) {
     throw new ApiError(400, "Username or email is required")
   }
+
+  const user = await User.findOne({
+    $or: [{ username }, { email }],
+  })
 
   const isPasswordValid = await user.isPasswordCorrect(password)
 
@@ -133,7 +136,8 @@ const loginUser = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .cookie("accessToken", accessToken, refreshToken)
+    .cookie("accessToken", accessToken, options)
+    .cookie("refereshToken", refreshToken, options)
     .json(
       new ApiResponse(
         200,

@@ -118,7 +118,7 @@ const loginUser = asyncHandler(async (req, res) => {
     $or: [{ username }, { email }],
   })
 
-  const isPasswordValid = await user.isPasswordCorrect(password)
+  const isPasswordValid = user.isPasswordCorrect(password)
 
   if (!isPasswordValid) {
     throw new ApiError(401, "Invalid user credentials")
@@ -138,7 +138,7 @@ const loginUser = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .cookie("accessToken", accessToken, options)
-    .cookie("refereshToken", refreshToken, options)
+    .cookie("refreshToken", refreshToken, options)
     .json(
       new ApiResponse(
         200,
@@ -155,17 +155,26 @@ const loginUser = asyncHandler(async (req, res) => {
 const changeCurrentPassword = asyncHandler(async (req, res) => {
   const { oldPassword, newPassword } = req.body
 
-  const user = await User.findById(req.user?._id)
+  if (!oldPassword || !newPassword) {
+    throw new ApiError(400, "both old and new passwords are required!")
+  }
 
-  const isPasswordCorrect = await user.isPasswordCorrect(oldPassword)
+  const user = await User.findById(req.user?._id)
+  const isPasswordCorrect = user.isPasswordCorrect(oldPassword)
 
   if (!isPasswordCorrect) {
     throw new ApiError(400, "Invalid old password!")
   }
 
+  const oldHashedPassword = user.password
+
   user.password = newPassword
 
-  await user.save({ validateBeforeSave: false })
+  const updatedUser = await user.save({ validateBeforeSave: false })
+
+  if (oldHashedPassword === updatedUser.password) {
+    throw new ApiError(500, "Something went wrong while changing password!")
+  }
 
   return res
     .status(200)
@@ -183,7 +192,7 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
 
   if (!fullName || !email) throw new ApiError(400, "All fields are required")
 
-  const user = await User.findByIdAndUpdate(
+  await User.findByIdAndUpdate(
     req.user?._id,
     {
       $set: {

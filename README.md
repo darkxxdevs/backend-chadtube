@@ -1,3 +1,3 @@
 ## backend application for a video streaming and social applciation
 
-- [Developer](https://github.com/darkxxdevs)
+- [Models](https://app.eraser.io/workspace/FaHQGoD2LtUK6iYSum4M?origin=share)

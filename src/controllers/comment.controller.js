@@ -23,7 +23,8 @@ const getVideoComments = asyncHandler(async (req, res, next) => {
 })
 
 const addComment = asyncHandler(async (req, res) => {
-  const { videoId, content } = req.body
+  const videoId = req.params.videoId
+  const { content } = req.body
 
   const ownerId = req.user?._id
 

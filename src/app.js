@@ -31,7 +31,11 @@ app.use(cookieParser())
 
 // route imports
 import userRouter from "./routes/users.routes.js"
+import commentRouter from "./routes/comments.routes.js"
+import dashboardRouter from "./routes/dashboard.routes.js"
 
 app.use("/api/v1/users", userRouter)
+app.use("/api/v1/comments", commentRouter)
+app.use("/api/dashboars/", dashboardRouter)
 
 export default app

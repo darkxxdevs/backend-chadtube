@@ -118,6 +118,10 @@ const loginUser = asyncHandler(async (req, res) => {
     $or: [{ username }, { email }],
   })
 
+  if (!user) {
+    throw new ApiError(401, "Invalid user credentials")
+  }
+
   const isPasswordValid = user.isPasswordCorrect(password)
 
   if (!isPasswordValid) {
@@ -212,8 +216,8 @@ const logoutUser = asyncHandler(async (req, res) => {
   await User.findByIdAndUpdate(
     req.user._id,
     {
-      $set: {
-        refreshToken: undefined,
+      $unset: {
+        refreshToken: 1,
       },
     },
     {

@@ -22,4 +22,4 @@ const LikesSchema = new Schema(
   { timestamps: true }
 )
 
-export const Like = Model("Likes", LikesSchema)
+export const Like = Model("Like", LikesSchema)

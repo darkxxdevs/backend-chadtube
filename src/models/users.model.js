@@ -52,17 +52,16 @@ const userSchema = new Schema(
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next()
   try {
+    console.log(this.password)
     this.password = await bcrypt.hash(this.password, 10)
     next()
   } catch (error) {
-    throw new Error(`Error hashing password: ${error.message}`)``
+    throw new Error(`Error hashing password: ${error.message}`)
   }
 })
 
 userSchema.methods.isPasswordCorrect = async function (password) {
-  console.log("password check invoked")
   try {
-    console.log(password, this.password)
     return await bcrypt.compare(password, this.password)
   } catch (error) {
     throw new Error(`Error checking password: ${error.message}`)

@@ -15,6 +15,10 @@ const CommentSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "User",
     },
+    isEdited: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 )

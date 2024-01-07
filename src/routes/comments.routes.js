@@ -4,7 +4,7 @@ import {
   updateComment,
   getVideoComments,
   deleteComment,
-} from "../controllers/comment.controller"
+} from "../controllers/comment.controller.js"
 
 const router = Router()
 

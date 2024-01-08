@@ -1,7 +1,7 @@
 import { isValidObjectId } from "mongoose"
-import { ApiError } from "../utils/ApiErrors"
-import { ApiResponse } from "../utils/ApiResponse"
-import asyncHandler from "../utils/asyncHandler"
+import { ApiError } from "../utils/ApiErrors.js"
+import { ApiResponse } from "../utils/ApiResponse.js"
+import asyncHandler from "../utils/asyncHandler.js"
 
 const createPlaylist = asyncHandler(async (req, res) => {})
 

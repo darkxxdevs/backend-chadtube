@@ -1,9 +1,9 @@
 import mongoose, { isValidObjectId } from "mongoose"
 import mongoose from "mongoose"
-import { ApiError } from "../utils/ApiErrors"
-import { ApiResponse } from "../utils/ApiResponse"
-import asyncHandler from "../utils/asyncHandler"
-import { uploadOnCloudinary } from "../utils/cloudinary"
+import { ApiError } from "../utils/ApiErrors.js"
+import { ApiResponse } from "../utils/ApiResponse.js"
+import asyncHandler from "../utils/asyncHandler.js"
+import { uploadOnCloudinary } from "../utils/cloudinary.js"
 
 const getAllVideos = asyncHandler(async (req, res) => {})
 

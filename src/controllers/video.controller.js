@@ -1,5 +1,4 @@
 import mongoose, { isValidObjectId } from "mongoose"
-import mongoose from "mongoose"
 import { ApiError } from "../utils/ApiErrors.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import asyncHandler from "../utils/asyncHandler.js"

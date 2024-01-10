@@ -9,7 +9,7 @@ const getUserPlaylist = asyncHandler(async (req, res) => {})
 
 const getPlaylistById = asyncHandler(async (req, res) => {})
 
-const addVideoToPlaylist = asyncHandler(async(req, res) > {})
+const addVideoToPlaylist = asyncHandler(async (req, res) => {})
 
 const removeVideoFromPlaylist = asyncHandler(async (req, res) => {})
 

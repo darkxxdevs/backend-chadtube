@@ -1,4 +1,4 @@
-import { Schema, Model } from "mongoose"
+import { Schema, model } from "mongoose"
 
 const LikesSchema = new Schema(
   {
@@ -22,4 +22,4 @@ const LikesSchema = new Schema(
   { timestamps: true }
 )
 
-export const Like = Model("Like", LikesSchema)
+export const Like = model("Like", LikesSchema)

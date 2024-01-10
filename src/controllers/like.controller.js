@@ -1,5 +1,5 @@
 import { ApiResponse } from "../utils/ApiResponse.js"
-import mongoose, { isValidObjectId } from "mongoose.js"
+import mongoose, { isValidObjectId } from "mongoose"
 import { ApiError } from "../utils/ApiErrors.js"
 import asyncHandler from "../utils/asyncHandler.js"
 
@@ -13,4 +13,4 @@ const toggleTweetLike = asyncHandler(async (req, res) => {})
 
 const getLikedVideos = asyncHandler(async (req, res) => {})
 
-export { toggleTweetLike, toggleVideoLike, toggleCommentLike, geLikedVideos }
+export { toggleTweetLike, toggleVideoLike, toggleCommentLike, getLikedVideos }

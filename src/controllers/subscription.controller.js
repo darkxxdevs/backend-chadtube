@@ -6,15 +6,15 @@ import { Subscriptions } from "../models/subscription.model.js"
 import asyncHandler from "../utils/asyncHandler.js"
 
 const toggleSubscription = asyncHandler(async (req, res) => {
-  const { channelId } = req.params.channelId
+  const { channelId } = req.params
 })
 
 const getUserChannelSubscribers = asyncHandler(async (req, res) => {
-  const { channelId } = req.params.channelId
+  const { channelId } = req.params
 })
 
 const getUserSubscribedChannels = asyncHandler(async (req, res) => {
-  const { subscriberId } = req.params.subscriberId
+  const { subscriberId } = req.params
 })
 
 export {

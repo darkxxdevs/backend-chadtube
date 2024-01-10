@@ -5,7 +5,7 @@ import { ApiResponse } from "../utils/ApiResponse.js"
 import asyncHandler from "../utils/asyncHandler.js"
 
 const getVideoComments = asyncHandler(async (req, res, next) => {
-  const videoId = req.params.videoId
+  const { videoId } = req.params
 
   if (!mongoose.Types.ObjectId.isValid(videoId)) {
     throw new ApiError(400, "Invalid video id type!")
@@ -49,7 +49,7 @@ const addComment = asyncHandler(async (req, res) => {
 })
 
 const deleteComment = asyncHandler(async (req, res) => {
-  const commentId = req.params.commentId
+  const { commentId } = req.params
 
   if (!mongoose.Types.ObjectId.isValid(commentId)) {
     throw new ApiError(400, "Invalid comment id!")
@@ -70,7 +70,7 @@ const deleteComment = asyncHandler(async (req, res) => {
 
 const updateComment = asyncHandler(async (req, res) => {
   const { newContent } = req.body
-  const commentId = req.params.commentId
+  const { commentId } = req.params
 
   if (!mongoose.Types.ObjectId.isValid(commentId)) {
     throw new ApiError(400, "Invalid comment id !")

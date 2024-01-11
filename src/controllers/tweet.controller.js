@@ -1,4 +1,4 @@
-import mongoose, { isValidObjectId } from "mongoose"
+import mongoose from "mongoose"
 import { Tweet } from "../models/tweets.model.js"
 import { User } from "../models/users.model.js"
 import { ApiError } from "../utils/ApiErrors.js"

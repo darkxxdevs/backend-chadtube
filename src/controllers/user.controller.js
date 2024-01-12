@@ -56,6 +56,8 @@ const registerUser = asyncHandler(async (req, res) => {
 
   const avatarLocalPath = req.files?.avatar[0].path
 
+  console.log(req.files)
+
   let coverImageLocalPath
 
   if (

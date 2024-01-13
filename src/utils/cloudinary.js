@@ -25,4 +25,22 @@ const uploadOnCloudinary = async (localFIlePath) => {
   }
 }
 
-export { uploadOnCloudinary }
+const getPublicIdFromUrl = (publicUrl) => {
+  const match = publicUrl.match(/\/upload\/(.+?)\//)
+  return match ? match[1] : null
+}
+
+const deleteFromCloudinary = async (assetPublicId) => {
+  try {
+    if (!assetPublicId) return null
+
+    const response = await cloudinary.api.delete_resources([assetPublicId])
+
+    return response
+  } catch (error) {
+    console.log(`Error occured while deleting the resource; ${error}`)
+    return null
+  }
+}
+
+export { uploadOnCloudinary, deleteFromCloudinary, getPublicIdFromUrl }

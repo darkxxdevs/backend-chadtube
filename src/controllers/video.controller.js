@@ -115,46 +115,64 @@ const updateVideo = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Invalid video id!")
   }
 
-  const thumbnailLocalPath = req.file.thumbnail
+  const { title, description } = req.body
 
-  if (!thumbnailLocalPath) {
-    throw new ApiError(400, "thumbnail file missing!")
+  const thumbnailLocalPath = req.file ? req.file.thumbnail : undefined
+
+  if (!title && !description && !thumbnailLocalPath) {
+    throw new ApiError(400, "Error no data provided for updation!")
   }
 
   const video = await Video.findById(videoId)
 
-  const oldThumbnailPublicId = getPublicIdFromUrl(video.thumbnail)
+  let updateObject = {}
 
-  const response = await deleteFromCloudinary(oldThumbnailPublicId)
+  if (thumbnailLocalPath) {
+    const oldThumbnailPublicId = getPublicIdFromUrl(video.thumbnail)
 
-  // check for the response through console log remove it later on
+    const response = await deleteFromCloudinary(oldThumbnailPublicId)
 
-  console.log(response)
-  if (!response) {
-    throw new ApiError(500, "Error while deleting the older thumbnail!")
+    // check for the response through console log remove it later on
+
+    console.log(response)
+    if (!response) {
+      throw new ApiError(500, "Error while deleting the older thumbnail!")
+    }
+
+    const newthumbnail = await uploadOnCloudinary(thumbnailLocalPath)
+
+    if (!newthumbnail) {
+      throw new ApiError(500, "Error while uploading thumbnail!")
+    }
+
+    updateObject.thumbnail = newthumbnail
   }
 
-  const newthumbnail = await uploadOnCloudinary(thumbnailLocalPath)
+  if (title) {
+    updateObject.title = title
+  }
 
-  if (!newthumbnail) {
-    throw new ApiError(500, "Error while uploading thumbnail!")
+  if (description) {
+    updateObject.description = description
   }
 
   const updatedVideoData = await Video.findByIdAndUpdate(
     videoId,
-    {
-      thumbnail: newthumbnail,
-    },
+    updateObject,
     {
       new: true,
     }
   )
 
-  if(!updatedVideoData){
-     throw new ApiError(500 , "Error occured while updating thumbnail in db!")
+  if (!updatedVideoData) {
+    throw new ApiError(500, "Error occured while updating data in db!")
   }
 
-  return res.status(200).json(new ApiResponse(200 , updatedVideoData , "thumbnail updated successfully!"))
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, updatedVideoData, "thumbnail updated successfully!")
+    )
 })
 
 const deleteVideo = asyncHandler(async (req, res) => {})

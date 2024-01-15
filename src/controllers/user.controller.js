@@ -56,8 +56,6 @@ const registerUser = asyncHandler(async (req, res) => {
 
   const avatarLocalPath = req.files?.avatar[0].path
 
-  console.log(req.files)
-
   let coverImageLocalPath
 
   if (
@@ -124,10 +122,10 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new ApiError(401, "Invalid user credentials")
   }
 
-  const isPasswordValid = await user.isPasswordCorrect(password)
+  const isPasswordValid = user.isPasswordCorrect(password)
 
   if (!isPasswordValid) {
-    throw new ApiError(401, "Invalid user credentials")
+    throw new ApiError(401, "Incorrect password!")
   }
 
   const { accessToken, refreshToken } = await generateTokens(user._id)

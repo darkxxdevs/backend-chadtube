@@ -28,7 +28,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
     const sortStage = {}
     sortStage[sortBy] = sortOrder
     pipeLine.push({
-      $sort: { sortStage },
+      $sort: sortStage,
     })
   }
 
@@ -67,6 +67,8 @@ const publishAVideo = asyncHandler(async (req, res) => {
   const videoFile = await uploadOnCloudinary(videoFileLocalPath)
   const thumbnail = await uploadOnCloudinary(thumbnailLocalPath)
 
+  console.log()
+
   if (!videoFile || !thumbnail) {
     throw new ApiError(500, "Both video and avatar are required!")
   }
@@ -74,8 +76,8 @@ const publishAVideo = asyncHandler(async (req, res) => {
   const owner = req.user?._id
 
   const newVideo = await Video.create({
-    videoFile: videoFile,
-    thumbnail: thumbnail,
+    videoFile: videoFile.url,
+    thumbnail: thumbnail.url,
     owner: owner,
     title: title,
     description: description,

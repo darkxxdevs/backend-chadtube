@@ -1,5 +1,6 @@
 import fs from "fs"
 import { v2 as cloudinary } from "cloudinary"
+import { extractPublicId } from "cloudinary-build-url"
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -26,20 +27,29 @@ const uploadOnCloudinary = async (localFIlePath) => {
 }
 
 const getPublicIdFromUrl = (publicUrl) => {
-  const match = publicUrl.match(/\/upload\/(.+?)\//)
-  return match ? match[1] : null
+  return extractPublicId(publicUrl)
 }
 
-const deleteFromCloudinary = async (assetPublicId) => {
+const deleteFromCloudinary = async (resourceId, resourceType) => {
   try {
-    if (!assetPublicId) return null
+    if (!resourceId) return null
 
-    const response = await cloudinary.api.delete_resources([assetPublicId])
+    const response = await cloudinary.uploader.destroy(resourceId, {
+      resource_type: resourceType,
+    })
+
+    console.log("Cloudinary Deletion Response:", response)
 
     return response
   } catch (error) {
-    console.log(`Error occured while deleting the resource; ${error}`)
-    return null
+    console.log(
+      `Error occurred while deleting the resource: ${JSON.stringify(
+        error,
+        null,
+        2
+      )}`
+    )
+    throw error
   }
 }
 

@@ -192,24 +192,24 @@ const deleteVideo = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Video not found!")
   }
 
-  const videoFileUrl = videoToBeRemoved.videoFile
-  const thumbnailUrl = videoToBeRemoved.thumbnail
+  const { videoFile, thumbnail } = videoToBeRemoved
 
-  const videoPublicId = getPublicIdFromUrl(videoFileUrl)
-  console.log("video public id", videoPublicId)
-  const videoThumbnailPublicId = getPublicIdFromUrl(thumbnailUrl)
-  console.log("video thumbnail public url!", videoThumbnailPublicId)
+  const videoPublicId = getPublicIdFromUrl(videoFile)
+  const videoThumbnailPublicId = getPublicIdFromUrl(thumbnail)
 
-  const deletedVideo = await deleteFromCloudinary(videoPublicId, "image")
-
-  if (!deletedVideo) {
-    throw new ApiError("Error while deleting video from cloudinary!")
-  }
-
-  const deletedThumbnail = await deleteFromCloudinary(videoPublicId, "video")
+  const deletedThumbnail = await deleteFromCloudinary(
+    videoThumbnailPublicId,
+    "image"
+  )
 
   if (!deletedThumbnail) {
     throw new ApiError("Error deleting thumbnail from cloudinary!")
+  }
+
+  const deletedVideo = await deleteFromCloudinary(videoPublicId, "video")
+
+  if (!deletedVideo) {
+    throw new ApiError("Error while deleting video from cloudinary!")
   }
 
   const deletedVideoDb = await Video.deleteOne({ _id: videoId })

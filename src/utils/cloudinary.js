@@ -39,7 +39,7 @@ const deleteFromCloudinary = async (resourceId, resourceType) => {
       resource_type: resourceType,
     })
 
-    console.log("Cloudinary Deletion Response:", response)
+    // console.log("Cloudinary Deletion Response:", response)
 
     return response
   } catch (error) {

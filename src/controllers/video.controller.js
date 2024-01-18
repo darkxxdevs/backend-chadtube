@@ -12,8 +12,6 @@ import { Video } from "../models/videos.model.js"
 const getAllVideos = asyncHandler(async (req, res) => {
   const { page = 1, limit = 10, query, sortBy, sortType } = req.body
 
-  console.log(query, sortBy, sortType)
-
   const pipeLine = []
 
   if (query) {
@@ -115,13 +113,13 @@ const getVideoById = asyncHandler(async (req, res) => {
 const updateVideo = asyncHandler(async (req, res) => {
   const { videoId } = req.params
 
-  if (mongoose.Types.ObjectId.isValid(videoId)) {
+  if (!mongoose.Types.ObjectId.isValid(videoId)) {
     throw new ApiError(400, "Invalid video id!")
   }
 
   const { title, description } = req.body
 
-  const thumbnailLocalPath = req.file ? req.file.thumbnail : undefined
+  const thumbnailLocalPath = req.file ? req.file.path : undefined
 
   if (!title && !description && !thumbnailLocalPath) {
     throw new ApiError(400, "Error no data provided for updation!")
@@ -131,14 +129,13 @@ const updateVideo = asyncHandler(async (req, res) => {
 
   let updateObject = {}
 
+  const videoThumbnailUrl = video.thumbnail
+
   if (thumbnailLocalPath) {
-    const oldThumbnailPublicId = getPublicIdFromUrl(video.thumbnail)
+    const oldThumbnailPublicId = getPublicIdFromUrl(videoThumbnailUrl)
 
     const response = await deleteFromCloudinary(oldThumbnailPublicId, "image")
 
-    // check for the response through console log remove it later on
-
-    console.log(response)
     if (!response) {
       throw new ApiError(500, "Error while deleting the older thumbnail!")
     }
@@ -149,7 +146,7 @@ const updateVideo = asyncHandler(async (req, res) => {
       throw new ApiError(500, "Error while uploading thumbnail!")
     }
 
-    updateObject.thumbnail = newthumbnail
+    updateObject.thumbnail = newthumbnail.url
   }
 
   if (title) {

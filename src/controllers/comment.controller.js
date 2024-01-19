@@ -14,12 +14,12 @@ const getVideoComments = asyncHandler(async (req, res, next) => {
   const comments = await Comment.find({ video: videoId })
 
   if (comments.length === 0) {
-    res.status(200).json(ApiResponse(200, { comments }, "No comments found!"))
+    res.status(200).json(new ApiResponse(200, comments, "No comments found!"))
   }
 
   res
     .status(200)
-    .json(ApiResponse(200, { comments }, "Comments fetch sucessful!"))
+    .json(new ApiResponse(200, comments, "Comments fetch sucessful!"))
 })
 
 const addComment = asyncHandler(async (req, res) => {
@@ -45,7 +45,7 @@ const addComment = asyncHandler(async (req, res) => {
     throw new ApiError(500, "Error while creating comment!")
   }
 
-  res.status(201).json(ApiResponse(201, { comment }, "Comment created!"))
+  res.status(201).json(new ApiResponse(201, { comment }, "Comment created!"))
 })
 
 const deleteComment = asyncHandler(async (req, res) => {
@@ -63,7 +63,7 @@ const deleteComment = asyncHandler(async (req, res) => {
 
   await Comment.deleteOne({ _id: commentId })
 
-  res
+  return res
     .status(200)
     .json(new ApiResponse(200, {}, "Comment deleted successfully!"))
 })

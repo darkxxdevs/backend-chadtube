@@ -8,7 +8,7 @@ import {
 
 const router = Router()
 
-router.route("/:videoId").get(getVideoComments).patch(addComment)
+router.route("/:videoId").get(getVideoComments).post(addComment)
 router.route("/c/:commentId").delete(deleteComment).patch(updateComment)
 
 export default router

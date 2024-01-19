@@ -43,7 +43,7 @@ import tweetRouter from "./routes/tweet.routes.js"
 app.use("/api/v1/users", userRouter)
 app.use("/api/v1/comments", commentRouter)
 app.use("/api/dashboard", dashboardRouter)
-app.use("/api/v1/healthcheck", healthCheckRouter)
+app.use("/api/v1/check", healthCheckRouter)
 app.use("/api/v1/likes", likeRouter)
 app.use("/api/v1/playlist", playlistRouter)
 app.use("/api/v1/subscriptions", subcriptionRouter)

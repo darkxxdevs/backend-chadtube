@@ -4,7 +4,7 @@ import { Comment } from "../models/comments.model.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import asyncHandler from "../utils/asyncHandler.js"
 
-const getVideoComments = asyncHandler(async (req, res, next) => {
+const getVideoComments = asyncHandler(async (req, res) => {
   const { videoId } = req.params
 
   if (!mongoose.Types.ObjectId.isValid(videoId)) {
@@ -23,7 +23,7 @@ const getVideoComments = asyncHandler(async (req, res, next) => {
 })
 
 const addComment = asyncHandler(async (req, res) => {
-  const videoId = req.params.videoId
+  const { videoId } = req.params
   const { content } = req.body
 
   const ownerId = req.user?._id
@@ -76,13 +76,13 @@ const updateComment = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Invalid comment id !")
   }
 
+  console.log(newContent)
+
   const comment = await Comment.findByIdAndUpdate(
     commentId,
     {
-      $set: {
-        content: newContent,
-        isEdited: true,
-      },
+      content: newContent,
+      isEdited: true,
     },
     { new: true }
   )
@@ -91,7 +91,7 @@ const updateComment = asyncHandler(async (req, res) => {
     throw new ApiError(500, "Error while updating comment!")
   }
 
-  res
+  return res
     .status(200)
     .json(new ApiResponse(200, { comment }, "comment updated successfully!"))
 })

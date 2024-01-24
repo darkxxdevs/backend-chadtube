@@ -186,9 +186,10 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
 })
 
 const getCurrentUser = asyncHandler(async (req, res) => {
+  const user = req.user
   return res
     .status(200)
-    .json(new ApiResponse(200, "User fetched successfully!"))
+    .json(new ApiResponse(200, user, "User fetched successfully!"))
 })
 
 const updateAccountDetails = asyncHandler(async (req, res) => {

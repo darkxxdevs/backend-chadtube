@@ -67,10 +67,14 @@ const toggleCommentLike = asyncHandler(async (req, res) => {
       throw new ApiError(200, "Error while adding like!")
     }
 
-    res.status(200).json(200, { response }, "Successfully added the like!")
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(200, { info: response }, "Successfully added the like!")
+      )
   }
 
-  const response = await like.deleteOne({
+  const response = await Like.deleteOne({
     $and: [{ comment: commentId }, { likedBy: userId }],
   })
 
@@ -78,9 +82,9 @@ const toggleCommentLike = asyncHandler(async (req, res) => {
     throw new ApiError(500, "Error removing like!")
   }
 
-  res
-    .send(200)
-    .json(new ApiResponse(200, response, "Like successfully deleted!"))
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "Like successfully deleted!"))
 })
 
 const toggleTweetLike = asyncHandler(async (req, res) => {
@@ -88,7 +92,7 @@ const toggleTweetLike = asyncHandler(async (req, res) => {
 
   const userId = req.user?._id
 
-  if (!mongoose.Types.ObejctId.isValid(tweetId)) {
+  if (!mongoose.Types.ObjectId.isValid(tweetId)) {
     throw new ApiError(400, "Ivalid tweet Id !")
   }
 
@@ -106,7 +110,9 @@ const toggleTweetLike = asyncHandler(async (req, res) => {
       throw new ApiError(500, "Error adding like!")
     }
 
-    res.status(200).json(200, { response }, "successFully added like!")
+    return res
+      .status(200)
+      .json(new ApiResponse(200, { response }, "successFully added like!"))
   }
 
   const response = await Like.deleteOne({
@@ -117,28 +123,31 @@ const toggleTweetLike = asyncHandler(async (req, res) => {
     throw new ApiError(500, "Error adding like!")
   }
 
-  res
+  return res
     .status(200)
-    .json(new ApiResponse(200, { response }, "Successfully deleted like!"))
+    .json(new ApiResponse(200, {}, "Successfully deleted like!"))
 })
 
 const getLikedVideos = asyncHandler(async (req, res) => {
   const userId = req.user?._id
 
-  const likeVideos = await Like.find({
+  const likedVideos = await Like.find({
     likedBy: userId,
+    video: {
+      $exists: true,
+    },
   })
 
-  if (likeVideos.length === 0) {
+  if (likedVideos.length === 0) {
     return res
       .status(204)
       .json(new ApiResponse(204, [], "No liked videos so far!"))
   }
 
-  res
+  return res
     .status(200)
     .json(
-      new ApiResponse(200, likeVideos, "Successfully fetched liked  videos !")
+      new ApiResponse(200, likedVideos, "Successfully fetched liked  videos !")
     )
 })
 

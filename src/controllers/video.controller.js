@@ -39,7 +39,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
 
   if (videos.length === 0) {
     return res
-      .status(204)
+      .status(200)
       .json(new ApiResponse(204, [], "No videos found for the search!"))
   }
 

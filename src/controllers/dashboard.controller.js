@@ -141,7 +141,7 @@ const getChannelVideos = asyncHandler(async (req, res) => {
 
   if (userVideos.length === 0) {
     return res
-      .status(204)
+      .status(200)
       .json(new ApiResponse(204, [], "no videos so far ...."))
   }
 

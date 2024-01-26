@@ -38,7 +38,7 @@ const getUserTweets = asyncHandler(async (req, res) => {
   const userTweets = await Tweet.find({ owner: userId })
 
   if (userTweets.length === 0) {
-    return res.status(204).json(new ApiResponse(204, [], "No posts found!"))
+    return res.status(200).json(new ApiResponse(204, [], "No posts found!"))
   }
 
   return res

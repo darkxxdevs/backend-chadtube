@@ -45,7 +45,7 @@ const getUserPlaylists = asyncHandler(async (req, res) => {
 
   if (userPlaylists.length === 0) {
     return res
-      .send(204)
+      .send(200)
       .json(new ApiResponse(204, [], "No playlists creatd so far!"))
   }
 

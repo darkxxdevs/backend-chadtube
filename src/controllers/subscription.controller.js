@@ -1,7 +1,6 @@
 import mongoose, { mongo } from "mongoose"
 import { ApiError } from "../utils/ApiErrors.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
-import { User } from "../models/users.model.js"
 import { Subscriptions } from "../models/subscription.model.js"
 import asyncHandler from "../utils/asyncHandler.js"
 
@@ -82,25 +81,19 @@ const getUserChannelSubscribers = asyncHandler(async (req, res) => {
 const getUserSubscribedChannels = asyncHandler(async (req, res) => {
   const { subscriberId } = req.params
 
-  console.log(subscriberId)
-
   if (!mongoose.Types.ObjectId.isValid(subscriberId)) {
     throw new ApiError(400, "Invaild objectid !")
   }
-
-  console.log("valid id!")
 
   const subscribedChannelList = await Subscriptions.find({
     subscriber: subscriberId,
   }).select("-createdAt -updatedAt")
 
-  console.log(subscribedChannelList)
-
   if (subscribedChannelList.length === 0) {
     console.log("invoked!")
     return res
       .status(200)
-      .json(new ApiResponse(200, [], "no channels subscribed yet!"))
+      .json(new ApiResponse(204, [], "no channels subscribed yet!"))
   }
 
   return res

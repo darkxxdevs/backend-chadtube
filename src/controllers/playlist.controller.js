@@ -166,7 +166,7 @@ const updatePlaylist = asyncHandler(async (req, res) => {
   const { playlistId } = req.params
   const { name, description } = req.body
 
-  if (!mongoose.Type.ObjectId.isValid(playlistId)) {
+  if (!mongoose.Types.ObjectId.isValid(playlistId)) {
     throw new ApiError(400, "Invaild playlistId !")
   }
 
@@ -198,7 +198,7 @@ const updatePlaylist = asyncHandler(async (req, res) => {
   }
 
   return res
-    .stats(200)
+    .status(200)
     .json(
       new ApiResponse(200, updatedPlaylist, "Playlist updated successfully!")
     )

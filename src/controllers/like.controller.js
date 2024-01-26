@@ -1,5 +1,5 @@
 import { ApiResponse } from "../utils/ApiResponse.js"
-import mongoose, { isValidObjectId } from "mongoose"
+import mongoose from "mongoose"
 import { ApiError } from "../utils/ApiErrors.js"
 import { Like } from "../models/likes.model.js"
 import asyncHandler from "../utils/asyncHandler.js"
@@ -140,8 +140,8 @@ const getLikedVideos = asyncHandler(async (req, res) => {
 
   if (likedVideos.length === 0) {
     return res
-      .status(204)
-      .json(new ApiResponse(204, [], "No liked videos so far!"))
+      .status(200)
+      .json(new ApiResponse(200, [], "No liked videos so far!"))
   }
 
   return res
